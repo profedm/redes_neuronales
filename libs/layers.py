@@ -3,13 +3,17 @@ import numpy as np
 class FCL(object):
     def __init__(self,n,N,mu,std):
         #Inicializan atributos
-        self.w = np.random.normal(loc=mu,scale=std,size=(n,N))
-        self.b = np.random.normal(loc=mu,scale=std,size=N)
+        self.w = std*np.random.randn(n,N)
+        self.b = np.zeros(N)
         self.dw = np.zeros([n,N])
         self.db = np.zeros([1,N])
         self.s = np.zeros([1,N])
     def Avance(self,x):
         #Proceso de entrada
+        #print('w:' + str(self.w))
+        #print('b:' + str(self.b))
+        #print('x:' + str(x))
+        #print('r: ' + str(np.dot(x,self.w)))
         self.s[0,:] = np.dot(x,self.w)+self.b
         #Calcular Gradiente
         for i in range(self.dw.shape[1]):
@@ -18,5 +22,9 @@ class FCL(object):
         self.dx = self.w
         return self.s
     def Gradiente(self):
-        return self.dx,self.dw,self.db
+        dx = np.transpose(self.dx)
+        dw = np.transpose(self.dw)
+        db = np.transpose(self.db) 
+
+        return dx, dw, db
     
