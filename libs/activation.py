@@ -19,11 +19,11 @@ class relu(object):
         y[0, i] = x[0, i]
       else:
         y[0, i] = 0
-    return x
+    return y
   def Gradiente(x):
     y = np.zeros(x.shape)
     for i in range(x.shape[1]):
-      if(y[0, i] > 0):
+      if(x[0, i] > 0):
         y[0, i] = 1.0
       else:
         y[0, i] = 0

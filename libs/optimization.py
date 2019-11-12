@@ -45,7 +45,7 @@ class softmax(object):
       
       #Gradiente de clase correcta
       if(i == int(xd)):
-        g[0, i] = -(1-y_d)
+        g[0, i] = y_d - 1
       #Gradiente de clase incorrecta
       else:
         g[0, i] = y[0, i]

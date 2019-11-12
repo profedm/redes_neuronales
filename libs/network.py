@@ -165,12 +165,14 @@ class FCN_C(object):
         dxs,dws,dbs = self.L[p-1].Gradiente()
         #print(dxs.shape)
         for m in range(y.shape[1]):
-          dws[m, :] = dws[m, :]*ds[0, m]
+        #  dws[m, :] = dws[m, :]*ds[0, m]
           dbs[m, :] = dbs[m, :]*ds[0, m] 
 
+        #print("dws:" + str(np.transpose(dws)))
+
         #Ajustar pesos de capa de salida
-        self.L[p-1].w[:,:] = self.L[p-1].w - Lr*(np.transpose(dws))
-        self.L[p-1].b[:] = self.L[p-1].b - Lr*np.transpose(dbs)
+        self.L[p-1].w[:,:] = self.L[p-1].w - Lr*(np.dot(np.transpose(dws),ds) + (1e-3)*self.L[p-1].w)
+        self.L[p-1].b[:] = self.L[p-1].b - Lr*(np.transpose(dbs))
 
         #Gradiente acumulado
         dL = np.dot(ds, dxs)
@@ -187,8 +189,15 @@ class FCN_C(object):
           p_a = p - k - 2
 
           #Gradientes de capa actual
+          #print(p_a)
           dai = self.a[p_a]
           dxi,dwi,dbi = self.L[p_a].Gradiente()
+          #print("dai:" + str(dai))
+          #print("dwi:" + str(dwi))
+          #print("dbi:" + str(dbi))
+          #print(dwi.shape)
+          #print(self.L[p_a].w.shape)
+          #print("dbi:" + str(dbi))
 
           #Acumular gradiente 
           for l in range(k):
@@ -201,10 +210,15 @@ class FCN_C(object):
             dL = np.dot(dL*dah, dxh)
 
           #Ajustar pesos de capa actual
-          self.L[p_a].w[:,:] = self.L[p_a].w - Lr*(np.transpose(np.dot(dL*dai, dwi)))
-          self.L[p_a].b[:] = self.L[p_a].b - Lr*np.transpose(np.dot(dL*dai, dbi))
+          #print(dwi.shape)
+          #print("dw1: " + str((np.dot(np.transpose(dwi[0:1,:]), dL*dai))))
+          #print("db1: " + str((np.dot(np.transpose(dbi[0:1,:]), dL*dai))))
+          #print("dL:" + str(dL))
+          #print("dLa:" + str(dL*dai))
+          self.L[p_a].w[:,:] = self.L[p_a].w - Lr*(np.dot(np.transpose(dwi[0:1,:]), dL*dai) + (1e-3)*self.L[p_a].w)
+          self.L[p_a].b[:] = self.L[p_a].b - Lr*(np.dot(np.transpose(dbi[0:1, :]), dL*dai))
 
-        y = self.Avance(x[j,:])
+        #y = self.Avance(x[j,:])
         #print('Despues de optimizar:' + str(y))
         #print('--------')
       #Guardar historial del error
