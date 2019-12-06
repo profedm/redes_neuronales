@@ -1,0 +1,93 @@
+name: "FCNN E1"
+
+##Input Image (Image RGB)
+#layer {
+#  name:"data"
+#  type: "Input"
+#  top: "input_data"
+#  input_param { shape: { dim: 1 dim: 1 dim: 50 dim: 2 } }
+#}
+
+layer {
+  name:"Data"
+  type: "Data"
+  top: "Point"
+  top: "Label"
+  data_param {
+    source: "dataset/train_lmdb"
+    batch_size: 300
+    backend: LMDB
+  }
+  include: {phase: TRAIN} 
+}
+
+layer {
+  name:"Data"
+  type: "Data"
+  top: "Point"
+  top: "Label"
+  data_param {
+    source: "dataset/test_lmdb"
+    batch_size: 300
+    backend: LMDB
+  }
+  include: {phase: TEST} 
+}
+
+##Net Structure
+
+#Layer 1: Fully connected
+layer {
+  name: "fc1"
+  type: "InnerProduct"
+  bottom: "Point"
+  top: "fc1"
+  inner_product_param {
+    num_output: 100
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+    	type: "constant"
+    	value: 0
+    }
+  }
+}
+
+#Activation layer 1
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "fc1"
+  top: "relu1"
+}
+
+#Layer 2: Fully connected
+layer {
+  name: "fc2"
+  type: "InnerProduct"
+  bottom: "relu1"
+  top: "fc2"
+  inner_product_param {
+    num_output: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+    	type: "constant"
+    	value: 0
+    }
+  }
+}
+
+#Loss function
+layer{ 
+  name: "loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc2"
+  bottom: "Label"
+  top: "loss"
+}
+
