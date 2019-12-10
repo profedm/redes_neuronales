@@ -8,10 +8,10 @@ layer {
     phase: TRAIN
   }
   transform_param {
-    mean_file: "/home/edgar/Caffe_course/example2/dataset/train_mean.binaryproto"
+    mean_file: "dataset/CNN/train_mean.binaryproto"
   }
   data_param {
-    source: "/home/edgar/Caffe_course/example2/dataset/train_lmdb"
+    source: "dataset/CNN/train_lmdb"
     batch_size: 100
     backend: LMDB
   }
@@ -25,7 +25,7 @@ layer {
     phase: TEST
   }
   data_param {
-    source: "/home/edgar/Caffe_course/example2/dataset/test_lmdb"
+    source: "dataset/CNN/test_lmdb"
     batch_size: 100
     backend: LMDB
   }

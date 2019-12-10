@@ -1,25 +1,23 @@
-# reduce the learning rate after 8 epochs (4000 iters) by a factor of 10
+net: "model/CNN/CNN_train.prototxt"
 
-# The train/test net protocol buffer definition
-net: "/home/edgar/Caffe_course/example2/model/CNN_train.prototxt"
-# test_iter specifies how many forward passes the test should carry out.
-# In the case of MNIST, we have test batch size 100 and 100 test iterations,
-# covering the full 10,000 testing images.
-test_iter: 100
-# Carry out testing every 500 training iterations.
-test_interval: 500
-# The base learning rate, momentum and the weight decay of the network.
+#Parametros de entrenamiento
 base_lr: 0.001
 momentum: 0.9
 weight_decay: 0.004
-# The learning rate policy
+
+#Decaimiento de la tasa de aprendizaje
 lr_policy: "fixed"
-# Display every 100 iterations
+
+#Parametros de debug
 display: 100
-# The maximum number of iterations
+
+#Numero de iteraciones
 max_iter: 4000
-# snapshot intermediate results
+test_iter: 100
+test_interval: 500
+
+#Guardado de pesos
 snapshot: 4000
-snapshot_prefix: "/home/edgar/Caffe_course/example2/weights/model_w"
+snapshot_prefix: "weights/CNN/model_w"
 # solver mode: CPU or GPU
-solver_mode: CPU
+#solver_mode: CPU
